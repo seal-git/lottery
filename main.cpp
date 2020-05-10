@@ -23,12 +23,27 @@ double get_sum_of_GP(double possibility, int begin, int end){
 }
 
 int main(){
-	/*M円を超える確率を求める*/
+	/*calculate the possibility to get more than n*300 yen when buying n tickets*/
+	/*First		200mil, 42/420mil
+	 * sub 1		50mil, 84/420mil
+	 * sub2		0.1mil, 4158/420mil
+	 * Second	100mil, 126/420mil
+	 * Third		10mil, 420/420mil
+	 * Fourth	0.1mil, 4200/420mil
+	 * Fifth		3000, 4.2mil/420mil
+	 * Sixth		300, 42mil/420mil
+	 * Happy	10000, 0.42mil, 420mil
+	 */
 	int prize[3] = {10000, 3000, 300};
 	double possibility[3] = {0.001, 0.01, 0.1};
 	double all_possibility = 0.0;
 
-	int n = 50;
+	/*calulate the possibility of winning \100000+ to all_possibility*/
+	double all_tickets = 420.0 * pow(10, 6);
+	double other_possibility = (double)(42+84+4158+126+420+4200) / all_tickets;
+
+
+	int n = 37;
 	int M = 300*n;
 
 	/*express the combination of X1, X2, X3 as range to minimize complexity*/
@@ -109,7 +124,9 @@ int main(){
 			}
 		}
 	}
-	printf("all possibility:%.15lf\n", all_possibility);
+	all_possibility+=other_possibility;
+	printf("all possibility:%.15lf ", all_possibility);
+	printf("(other possibility:%.15lf)\n", other_possibility);
 
 	return 0;
 }
