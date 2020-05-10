@@ -28,77 +28,78 @@ int main(){
 	double possibility[3] = {0.001, 0.01, 0.1};
 	double all_possibility = 0.0;
 
-	int n = 100;
+	int n = 50;
 	int M = 300*n;
 
-	/*get the range of combination of X1, X2, X3* to minimize complexity*/
+	/*express the combination of X1, X2, X3 as range to minimize complexity*/
 	int X1_begin;
 	int X1_end;
-	int flag = 1;/*flag becomes 1 when X1_begin & X1_end are printed*/
+	int X1_flag = 0;/*flag becomes 1 when result is printed*/
 	for(int i = n; i>=0; i--){
 		int X1 = prize[0]*i;
 		if(X1>=M){
 			X1_begin = n;
 			X1_end = i;
 			//			printf("10000:%d\n", i);
-		}else if(flag == 1){
-			/*this scope is executed only once in one loop*/
-			printf("%d:%d-%d\n", prize[0], X1_begin, X1_end);
-			flag = 0;
-			double total_possibility = get_sum_of_GP(possibility[0], X1_begin, X1_end);
-			all_possibility += total_possibility;
-			printf("%.15lf\n", total_possibility);
 		}else{
+			if(X1_flag == 0){
+				/*result is printed only once in one loop*/
+				printf("%d:%d-%d\n", prize[0], X1_begin, X1_end);
+				X1_flag = 1;
+
+				/*calculate total possibility in the range*/
+				double total_possibility = get_sum_of_GP(possibility[0], X1_begin, X1_end);
+				all_possibility += total_possibility;
+				printf("%.15lf\n", total_possibility);
+			}
+			/*calculate X2*/
 			int X2_begin;
 			int X2_end;
-			int flag = 1;/*flag becomes 1 when X2_begin & X2_end are printed*/
+			int X2_flag = 0;
 			for(int j=n-i; j>=0; j--){
 				int X2 = X1 + prize[1]*j;
 				if(X2>=M){
 					X2_begin = n-i;
 					X2_end = j;
 					//	printf("10000:%d, 3000:%d\n", i, j);
-				}else if(flag == 1){
-					/*this scope is executed only once in one loop*/
-					printf("%d:%d, ", prize[0], i);
-					printf("%d:%d-%d\n", prize[1], X2_begin, X2_end);
-					flag = 0;
-					/*calculate total possibility in the range*/
-					double total_possibility = get_sum_of_GP(possibility[1], X2_begin, X2_end);
-					if(i==0){
-						total_possibility += 0.0;
-					}else{
-						total_possibility += pow(possibility[0], (double)i);
-					}
-					printf("%.15lf\n", total_possibility);
-					all_possibility += total_possibility;
 				}else{
+					if(X2_flag==0){
+						/*this scope is executed only once in one loop*/
+						printf("%d:%d, ", prize[0], i);
+						printf("%d:%d-%d\n", prize[1], X2_begin, X2_end);
+						X2_flag = 1;
+
+						/*calculate total possibility in the range*/
+						double total_possibility = get_sum_of_GP(possibility[1], X2_begin, X2_end);
+						if(i>0){
+							total_possibility *= pow(possibility[0], (double)i);
+						}
+						printf("%.15lf\n", total_possibility);
+						all_possibility += total_possibility;
+					}
+					/*calculate X3*/
 					int X3_begin;
 					int X3_end;
-					int flag = 1; /*flag becomes 1 when X3_begin & X3_end are printed*/
+					int X3_flag = 0; /*flag becomes 1 when X3_begin & X3_end are printed*/
 					for(int k=n-i-j; k>=0; k--){
 						int X3 = X2 + prize[2]*k;
 						if(X3>=M){
 							X3_begin = n-i-j;
 							X3_end = k;
 							//	printf("10000:%d, 3000:%d, 300:%d\n", i, j, k);
-						}else if(flag == 1){
+						}else if(X3_flag == 0){
 							/*this scope is executed only once in one loop*/
 							printf("%d:%d, ", prize[0], i);
 							printf("%d:%d, ", prize[1], j);
-							flag = 0;
+							X3_flag = 1;
 							printf("%d:%d-%d\n",prize[2], X3_begin, X3_end);
 							/*calculate total possibility in the range*/
 							double total_possibility = get_sum_of_GP(possibility[2], X3_begin, X3_end);
-							if(i == 0){
-								total_possibility += 0.0;
-							}else{
-								total_possibility = pow(possibility[0], (double)i);
+							if(i > 0){
+								total_possibility *= pow(possibility[0], (double)i);
 							}
-							if(j == 0){
-								total_possibility += 0.0;
-							}else{
-								total_possibility = pow(possibility[1], (double)j);
+							if(j > 0){
+								total_possibility *= pow(possibility[1], (double)j);
 							}
 							printf("%.15lf\n", total_possibility);
 							all_possibility += total_possibility;
