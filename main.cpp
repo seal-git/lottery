@@ -17,12 +17,12 @@ using namespace std;
 
 int main(){
 
-//	CalcPossibility(34, true);
+	CalcPossibility(2, true);
 	string filename = "possibility.txt";
 	ofstream writing_file;
 	writing_file.open(filename, ios::out);
 
-	for(int i=34; i<333; i++){
+	for(int i=1; i<333; i++){
 		printf("%3d:", i);
 		double all_possibility = CalcPossibility(i, false);
 		writing_file << i << "\t" <<fixed<<setprecision(15)<< all_possibility << endl;
